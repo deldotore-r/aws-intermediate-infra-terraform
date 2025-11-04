@@ -1,1 +1,15 @@
-terraform.tfvars
+# Ignora a pasta de cache do Terraform
+.terraform/
+
+# Ignora arquivos de estado locais
+terraform.tfstate
+terraform.tfstate.backup
+
+# Ignora arquivos de plano
+*.tfplan
+
+# Ignora arquivos de variáveis sensíveis
+*.tfvars
+
+# Arquivo pessoal de aprendizado
+learn.md
