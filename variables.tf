@@ -1,40 +1,61 @@
+#-------------------------------#
+# Variáveis globais do projeto
+#-------------------------------#
+# Estas variáveis são repassadas para os módulos
+# e centralizam parâmetros comuns (região, nomes, tipos, etc.)
+#-------------------------------#
 
-# Variáveis globais do projeto Terraform AWS
+variable "project_name" {
+  description = "Nome base do projeto"
+  type        = string
+}
+
+variable "environment" {
+  description = "Ambiente (ex: dev, prod)"
+  type        = string
+}
 
 variable "aws_region" {
-  description = "Região AWS onde os recursos serão criados."
+  description = "Região AWS onde os recursos serão criados"
   type        = string
   default     = "us-east-1"
 }
 
-variable "project_name" {
-  description = "Nome base usado para tagueamento e identificação dos recursos."
+variable "vpc_cidr" {
+  description = "CIDR principal da VPC"
   type        = string
-  default     = "aws-intermediate-infra"
+  default     = "10.0.0.0/16"
 }
 
-variable "environment" {
-  description = "Ambiente de implantação (ex: dev, prod)."
+variable "public_subnets_cidrs" {
+  description = "CIDRs das subnets públicas"
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
+variable "private_subnets_cidrs" {
+  description = "CIDRs das subnets privadas"
+  type        = list(string)
+  default     = ["10.0.11.0/24", "10.0.12.0/24"]
+}
+
+variable "key_name" {
+  description = "Nome da key pair existente na AWS (SSH)"
   type        = string
-  default     = "dev"
 }
 
 variable "instance_type" {
-  description = "Tipo das instâncias EC2 utilizadas."
+  description = "Tipo da instância EC2"
   type        = string
   default     = "t3.micro"
 }
 
+variable "ami_id" {
+  description = "AMI utilizada para instâncias EC2"
+  type        = string
+}
+
 variable "my_ip" {
-  description = "Endereço IP público do usuário para liberar acesso SSH (formato x.x.x.x/32)."
+  description = "IP público do usuário no formato x.x.x.x/32 (para acesso SSH)"
   type        = string
 }
-
-variable "key_name" {
-  description = "Nome da chave SSH existente na AWS para acesso às instâncias."
-  type        = string
-}
-
-# Nota:
-# Variáveis sensíveis (como chaves) não devem ter valor padrão.
-# Elas podem ser passadas via CLI, .tfvars ou variáveis de ambiente.

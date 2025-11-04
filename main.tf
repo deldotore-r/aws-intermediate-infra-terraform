@@ -1,32 +1,44 @@
-
-# Arquivo principal do projeto Terraform AWS
-# Responsável por orquestrar os recursos definidos em arquivos separados.
+#-------------------------------#
+# Arquivo principal do projeto
+#-------------------------------#
+# Função: orquestrar os módulos (VPC, EC2, S3)
+# Não cria recursos diretos da AWS — apenas invoca módulos.
+#-------------------------------#
 
 #-------------------------------#
-# VPC e componentes de rede
+# Módulo VPC
 #-------------------------------#
-module "network" {
-  source = "./vpc"  # Diretório que conterá vpc.tf e seus recursos
+module "vpc" {
+  source                = "./modules/vpc" # Caminho do módulo
+  project_name          = var.project_name
+  environment           = var.environment
+  aws_region            = var.aws_region
+  vpc_cidr              = var.vpc_cidr
+  public_subnets_cidrs  = var.public_subnets_cidrs
+  private_subnets_cidrs = var.private_subnets_cidrs
 }
 
 #-------------------------------#
-# Instâncias EC2
+# Módulo EC2
 #-------------------------------#
-module "ec2_instances" {
-  source         = "./ec2"
-  vpc_id         = module.network.vpc_id
-  public_subnet  = module.network.public_subnets[0]
-  private_subnet = module.network.private_subnets[0]
+module "ec2" {
+  source         = "./modules/ec2"
+  project_name   = var.project_name
+  environment    = var.environment
+  vpc_id         = module.vpc.vpc_id
+  public_subnet  = module.vpc.public_subnets[0]
+  private_subnet = module.vpc.private_subnets[0]
   key_name       = var.key_name
-  my_ip          = var.my_ip
   instance_type  = var.instance_type
+  my_ip          = var.my_ip
+  ami_id         = var.ami_id
 }
 
 #-------------------------------#
-# Bucket S3
+# Módulo S3
 #-------------------------------#
-module "s3_storage" {
-  source       = "./s3"
+module "s3" {
+  source       = "./modules/s3"
   project_name = var.project_name
   environment  = var.environment
 }

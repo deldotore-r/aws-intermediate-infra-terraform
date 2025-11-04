@@ -1,21 +1,18 @@
-# Configura o provedor AWS usado pelo Terraform.
-# A região é passada via variável (definida em variables.tf).
+#-------------------------------#
+# Configuração do provedor AWS
+#-------------------------------#
 
 terraform {
-  required_version = ">= 1.5.0"
-
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
+      source  = "hashicorp/aws" # Provedor oficial AWS
+      version = "~> 5.0"        # Garante compatibilidade estável com a versão 5.x
     }
   }
+
+  required_version = ">= 1.6.0" # Versão mínima do Terraform compatível
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = var.aws_region # Região da AWS definida em variables.tf
 }
-
-# Nota:
-# O backend remoto (S3 + DynamoDB) será adicionado em projeto posterior.
-# Neste projeto, o estado permanecerá local (terraform.tfstate).
